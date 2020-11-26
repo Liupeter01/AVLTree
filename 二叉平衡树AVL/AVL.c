@@ -1,8 +1,9 @@
-#include"AVL.h"
 //Copyright:LPH
 //Author: ÁõÅæºã
 //Date:2020-11-26
-//Description:Æ½ºâ¶þ²æÊ÷µÄ»ù±¾¹¦ÄÜ
+//Description:Æ½ºâ¶þ²æÊ÷µÄ»ù±¾¹¦ÄÜº¯Êý
+
+#include"AVL.h"
 
 AVLNode* CreateAVLNode(ElemType x)               //Æ½ºâ¶þ²æÊ÷µÄ½áµã´´½¨º¯Êý
 {
@@ -146,20 +147,49 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 										  //0´ú±íRRÐý×ª
 										  //1´ú±íRLÐý×ª
 										  //2´ú±íLRÐý×ª
-									      //3´ú±íRRÐý×ª
+									      //3´ú±íLLÐý×ª
 										int flag[2][2] = { 0,1,2,3 };
 
-										int flag_ParentNode = (parent->BF > 0) ? 0 : 1;	   //ÅÐ¶Ïµ±Ç°ParentNodeÆ½ºâÒò×ÓµÄÕý¸ºÐÔ
+										int flag_ParentNode = (ParentNode->BF > 0) ? 0 : 1;	   //ÅÐ¶Ïµ±Ç°ParentNodeÆ½ºâÒò×ÓµÄÕý¸ºÐÔ
 										int flag_Ptemp = (ptemp->BF > 0) ? 0 : 1;		       //ÅÐ¶Ïµ±Ç°ptempÆ½ºâÒò×ÓµÄÕý¸ºÐÔ
 
-										void (*Rotatefunc[4])(AVLNode*) =
+										void (*Rotatefunc[4])(AVLNode**) =
 										{
-												  AVLTreeRotateRR,				//RRÐý×ªº¯Êý
-												  AVLTreeRotateRL,				//RLÐý×ªº¯Êý
-												  AVLTreeRotateLR,				//LRÐý×ªº¯Êý
-												   AVLTreeRotateLL				//LLÐý×ªº¯Êý
+												  AVLTreeRotateRR,				//RR   \   Ðý×ªº¯Êý
+												  AVLTreeRotateRL,				//RL   >  Ðý×ªº¯Êý
+												  AVLTreeRotateLR,				//LR   <  Ðý×ªº¯Êý
+												  AVLTreeRotateLL				    //LL    /   Ðý×ªº¯Êý
 										};
-										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](ParentNode);  //µ÷ÓÃÐý×ª·½·¨
+ 										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](&ParentNode);  //µ÷ÓÃÐý×ª·½·¨
+
+										if (isEmpty(stack))			  //ÅÐ¶ÏÕ»ÖÐÊÇ·ñÖ»ÓÐÒ»¸öÔªËØ
+										{
+												  //ÔÚÆ½ºâ¶þ²æÊ÷²»Æ½ºâµÄÕ¼Ö÷Ìå
+												  *node = ParentNode;			//ÔÚµ±Ç°µÄÊ÷ÖÐ£¬ParentNode¾ÍÊÇ¸ù½Úµã
+										}
+										else
+										{
+												  //ÔÚÆ½ºâ¶þ²æÊ÷ÖÐÓÐÒ»²¿·ÖÊÇ²»Æ½ºâµÄ
+												  AVLNode* Head = GetTop(stack);		  //Õ»Ã»¿Õ»ñÈ¡Õ»¶¥
+												  if (Head->lchild == ptemp)	//×óÊ÷ÎªÎ´Æ½ºâ»¯Ö®Ç°ptemp½áµã(ParentNodeµÄº¢×Ó½áµã)
+												  {
+															Head->lchild = ParentNode;				//Á´½ÓÐÂµÄ¸ù½Úµã
+												  }
+												  else									  //ÓÒÊ÷ÎªÎ´Æ½ºâ»¯Ö®Ç°ptemp½áµã(ParentNodeµÄº¢×Ó½áµã)
+												  {
+															Head->rchild = ParentNode;				//Á´½ÓÐÂµÄ¸ù½Úµã
+												  }
+
+												  ////µÚ¶þÖÖÁ´½ÓË¼Â·
+												  //if (Head->data > ParentNode->data)	//¸ù¾Ý´óÐ¡½øÐÐÐÂ¸ù½áµãµÄÁ´½Ó
+												  //{
+														//	Head->rchild = ParentNode;			
+												  //}
+												  //else									
+												  //{
+														//	Head->lchild = ParentNode;			
+												  //}
+										}
 							  }
 					}
 					DestroyLinkStack(&stack);				 //´Ý»ÙÕ»
