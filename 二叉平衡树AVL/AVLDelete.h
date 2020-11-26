@@ -1,2 +1,2 @@
 #pragma once
-#include"AVLBasic.h"
+#include"AVLStruct.h"

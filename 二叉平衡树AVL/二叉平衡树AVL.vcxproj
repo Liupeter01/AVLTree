@@ -139,14 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AVLBasic.c" />
+    <ClCompile Include="AVL.c" />
+    <ClCompile Include="AVLDelete.c" />
+    <ClCompile Include="AVLRotate.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVL.h" />
-    <ClInclude Include="AVLBasic.h" />
+    <ClInclude Include="AVLStruct.h" />
     <ClInclude Include="AVLDelete.h" />
-    <ClInclude Include="AVLInsert.h" />
     <ClInclude Include="AVLRotate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

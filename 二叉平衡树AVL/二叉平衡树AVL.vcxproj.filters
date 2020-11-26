@@ -18,24 +18,27 @@
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AVLBasic.c">
+    <ClCompile Include="AVLDelete.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AVLRotate.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AVL.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AVLBasic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="AVLRotate.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="AVLDelete.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AVLInsert.h">
+    <ClInclude Include="AVL.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AVL.h">
+    <ClInclude Include="AVLStruct.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
