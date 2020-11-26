@@ -34,5 +34,5 @@ void DestroyAVLTree(AVLTree* T);                       //平衡二叉树的销毁
 static void _DestroyAVLTree(AVLNode* p);          //平衡二叉树的销毁子函数
 
 ////////////////////////////////////////////////////////////判断当前的平衡二叉树是否平衡////////////////////////////////////////////////////
-BOOL JudgeAVLTree(AVLTree* T);                    //平衡二叉树的平衡性判断
-static BOOL _JudgeAVLTree(AVLNode* T, BOOL* balance, int* height);        //平衡二叉树的平衡性判断子函数
+BOOL JudgeAVLTree(AVLTree T);                    //平衡二叉树的平衡性判断
+static void _JudgeAVLTree(AVLNode* T, BOOL* balance);        //平衡二叉树的平衡性判断子函数

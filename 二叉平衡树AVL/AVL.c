@@ -168,21 +168,45 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 		  return FALSE;
 }
 
-BOOL JudgeAVLTree(AVLTree* T)                  //Æ½ºâ¶þ²æÊ÷µÄÆ½ºâÐÔÅÐ¶Ï
+BOOL JudgeAVLTree(AVLTree T)                  //Æ½ºâ¶þ²æÊ÷µÄÆ½ºâÐÔÅÐ¶Ï
 {
-		  if (T->root == NULL)
+		  if (T.root == NULL)
 		  {
 					return TRUE;
 		  }
 		  else
 		  {
 					BOOL balance = 0;
-					int height = 0;
-					return _JudgeAVLTree(T->root, &balance, &height);
+					_JudgeAVLTree(T.root, &balance);
+					return balance;
 		  }
 }
 
-static BOOL _JudgeAVLTree(AVLNode* T, BOOL* balance, int* height)       //Æ½ºâ¶þ²æÊ÷µÄÆ½ºâÐÔÅÐ¶Ï×Óº¯Êý
+static void _JudgeAVLTree(AVLNode* T, BOOL* balance)       //Æ½ºâ¶þ²æÊ÷µÄÆ½ºâÐÔÅÐ¶Ï×Óº¯Êý
 {
-		  return FALSE;
+		  if (T == NULL)				//¿Õ
+		  {
+					*balance = TRUE;
+					return;
+		  }
+		  else if((T->lchild == NULL) && (T->rchild == NULL))					//½áµãÎªÒ¶×Ó½áµã
+		  {
+					*balance = TRUE;
+					return;
+		  }
+		  else
+		  {
+					BOOL LeftBalance = FALSE, RightBalance = FALSE;		//×óÓÒÊ÷Æ½ºâÐÔ
+
+					_JudgeAVLTree(T->rchild, &RightBalance);		  //ÓÒ×ÓÊ÷×´Ì¬
+					_JudgeAVLTree(T->lchild, &LeftBalance);		  //×ó×ÓÊ÷×´Ì¬
+					if (abs(T->BF) <= 1)
+					{
+							  *balance = ((LeftBalance == RightBalance == TRUE) ? TRUE : FALSE);
+					}
+					else
+					{
+							  *balance = FALSE;
+					}
+		  }
 }
