@@ -197,16 +197,8 @@ static void _JudgeAVLTree(AVLNode* T, BOOL* balance)       //Æ½ºâ¶þ²æÊ÷µÄÆ½ºâÐÔÅ
 		  else
 		  {
 					BOOL LeftBalance = FALSE, RightBalance = FALSE;		//×óÓÒÊ÷Æ½ºâÐÔ
-
 					_JudgeAVLTree(T->rchild, &RightBalance);		  //ÓÒ×ÓÊ÷×´Ì¬
 					_JudgeAVLTree(T->lchild, &LeftBalance);		  //×ó×ÓÊ÷×´Ì¬
-					if (abs(T->BF) <= 1)
-					{
-							  *balance = ((LeftBalance == RightBalance == TRUE) ? TRUE : FALSE);
-					}
-					else
-					{
-							  *balance = FALSE;
-					}
+					*balance = ((abs(T->BF) <= 1 && LeftBalance == RightBalance == TRUE) ? TRUE : FALSE);
 		  }
 }
