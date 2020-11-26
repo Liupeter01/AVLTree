@@ -89,6 +89,7 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 					{
 							  parent = ptemp;								  //¼ÇÂ¼²åÈë½áµãÉÏÒ»´Î·ÃÎÊµÄ½áµã
 							  Push_Stack(&stack, parent);			  //½«²åÈë½ÚµãµÄÑØÍ¾×æÏÈ½áµãÈëÕ»
+
 							  if (ptemp->data == x)					  //½áµãÖØ¸´²åÈëÊ§°Ü
 							  {
 										return FALSE;							
@@ -112,35 +113,53 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 							  parent->rchild = ptemp;
 					}
 
-					while (!isEmpty(stack))							  //ÖØËãÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµ
+					/* ÖØËãÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµ*/
+					while (!isEmpty(stack))							
 					{
 							  ElemStackType ParentNode;
 							  Pop_Stack(&stack, &ParentNode);
 
-							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚ×óÊ÷²åÈëÖ±½Ó×Ô¼õ¼´¿É£ºÓÒÊ÷ - (×óÊ÷ + 1)		*/
-							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚÓÒÊ÷²åÈëÖ±½Ó×ÔÔö¼´¿É£ºÓÒÊ÷ + 1 - ×óÊ÷			*/
+							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚ×óÊ÷²åÈëÖ±½Ó×Ô¼õ¼´¿É£ºÓÒÊ÷ - (×óÊ÷ + 1) = ÓÒÊ÷ - ×óÊ÷ - 1	*/
+							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚÓÒÊ÷²åÈëÖ±½Ó×ÔÔö¼´¿É£ºÓÒÊ÷ + 1 - ×óÊ÷ = ÓÒÊ÷ - ×óÊ÷ + 1	*/
 
-							  if (ParentNode->lchild == ptemp)  //¸¸½ÚµãµÄ×ó×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã
+							  if (ParentNode->lchild == ptemp)		  //¸¸½ÚµãµÄ×ó×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã£¬×ó×ÓÊ÷×Ô¼õ
 							  {
-										ParentNode->BF--;				   //Èç¹ûÎª×ó×ÓÊ÷Ôò×Ô¼õ
+										ParentNode->BF--;				   
 							  }
 
-							  if (ParentNode->rchild == ptemp)  //¸¸½ÚµãµÄÓÒ×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã
+							  if (ParentNode->rchild == ptemp)          //¸¸½ÚµãµÄÓÒ×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã£¬ÓÒ×ÓÊ÷×ÔÔö
 							  {
-										ParentNode->BF++;				   //Èç¹ûÎªÓÒ×ÓÊ÷Ôò×ÔÔö
+										ParentNode->BF++;				   
 							  }
 
 							  if (ParentNode->BF == 0)					  //Ô­ÏÈµÄÒÑ¾­´æÔÚÒ»¸ö×ÓÊ÷£¬ÏÖÔÚ²åÈëÁíÒ»¸ö×ÓÊ÷
 							  {
 										break;											  //½áµãµÄÆ½ºâÒò×ÓÎª0£¬Ö±½ÓÌø³ö
 							  }
-							  else if(abs(ParentNode->BF) == 1)		  //Æ½ºâÒò×Ó´¦ÓÚ1»òÕß-1
+							  if(abs(ParentNode->BF) == 1)				  //Æ½ºâÒò×Ó´¦ÓÚ1»òÕß-1
 							  {
 										ptemp = ParentNode;			          //½øÐÐµü´ú£¬½«Ô­ÏÈµÄ¸¸½Úµã×÷ÎªÅÐ¶ÏµÄ½áµã
 							  }
-							  else                                                          //Æ½ºâÒò×Ó´¦ÓÚx<-1 »ò x>1µÄÇé¿ö£¬µ÷ÓÃ4ÖÖÐý×ª
+							  else														  //abs(ParentNode->BF)>1£¬µ÷ÓÃ4ÖÖÐý×ª
 							  {
-												  
+										/*Ðý×ª¹ØÏµ¶ÔÓ¦¾ØÕó*/
+										  //0´ú±íRRÐý×ª
+										  //1´ú±íRLÐý×ª
+										  //2´ú±íLRÐý×ª
+									      //3´ú±íRRÐý×ª
+										int flag[2][2] = { 0,1,2,3 };
+
+										int flag_ParentNode = (parent->BF > 0) ? 0 : 1;	   //ÅÐ¶Ïµ±Ç°ParentNodeÆ½ºâÒò×ÓµÄÕý¸ºÐÔ
+										int flag_Ptemp = (ptemp->BF > 0) ? 0 : 1;		       //ÅÐ¶Ïµ±Ç°ptempÆ½ºâÒò×ÓµÄÕý¸ºÐÔ
+
+										void (*Rotatefunc[4])(AVLNode*) =
+										{
+												  AVLTreeRotateRR,				//RRÐý×ªº¯Êý
+												  AVLTreeRotateRL,				//RLÐý×ªº¯Êý
+												  AVLTreeRotateLR,				//LRÐý×ªº¯Êý
+												   AVLTreeRotateLL				//LLÐý×ªº¯Êý
+										};
+										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](ParentNode);  //µ÷ÓÃÐý×ª·½·¨
 							  }
 					}
 					DestroyLinkStack(&stack);				 //´Ý»ÙÕ»
