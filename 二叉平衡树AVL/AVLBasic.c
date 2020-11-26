@@ -27,7 +27,13 @@ void DestroyAVLTree(AVLTree* T)                     //平衡二叉树的销毁
 
 static void _DestroyAVLTree(AVLNode* p)          //平衡二叉树的销毁子函数
 {
-
+		  if (p != NULL)
+		  {
+					AVLNode* ptemp = p;
+					_DestroyAVLTree(ptemp->lchild);
+					_DestroyAVLTree(ptemp->rchild);
+					free(ptemp);
+		  }
 }
 
 BOOL InsertAVLTree(AVLTree* T, ElemType x)           // 平衡二叉树的插入构建
