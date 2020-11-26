@@ -80,161 +80,90 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 		  }
 		  else
 		  {
+					LinkStack stack;	
+					InitLinkStack(&stack);							  //³õÊ¼»¯Õ»
+
 					AVLNode* ptemp = *node;
 					AVLNode* parent = NULL;
 					while (ptemp != NULL)
 					{
-							  parent = ptemp;				  //¼ÇÂ¼Ë«Ç×½áµã
-							  if (ptemp->data == x)
+							  parent = ptemp;								  //¼ÇÂ¼²åÈë½áµãÉÏÒ»´Î·ÃÎÊµÄ½áµã
+							  Push_Stack(&stack, parent);			  //½«²åÈë½ÚµãµÄÑØÍ¾×æÏÈ½áµãÈëÕ»
+							  if (ptemp->data == x)					  //½áµãÖØ¸´²åÈëÊ§°Ü
 							  {
-										return FALSE;		  //½áµãÖØ¸´
+										return FALSE;							
 							  }
-							  else if (ptemp->data > x)	  //²åÈëÊıÖµĞ¡ÓÚ½áµã
+							  else if (ptemp->data > x)				  //²åÈëÊıÖµĞ¡ÓÚ½áµã
 							  {
 										ptemp = ptemp->lchild;
 							  }
-							  else									 //²åÈëÊıÖµ´óÓÚ½áµã
+							  else												 //²åÈëÊıÖµ´óÓÚ½áµã
 							  {
 										ptemp = ptemp->rchild;
 							  }
 					}
 					ptemp = CreateAVLNode(x);
-					if (parent->data > x)					//¸¸½Úµã´óÓÚ²åÈë½áµã
+					if (parent->data > x)							     //¸¸½Úµã´óÓÚ²åÈë½áµã
 					{
 							  parent->lchild = ptemp;
 					}
-					else											  //¸¸½ÚµãĞ¡ÓÚ²åÈë½áµã
+					else															 //¸¸½ÚµãĞ¡ÓÚ²åÈë½áµã
 					{
 							  parent->rchild = ptemp;
 					}
+
+					while (!isEmpty(stack))							  //ÖØËãÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµ
+					{
+							  ElemStackType ParentNode;
+							  Pop_Stack(&stack, &ParentNode);
+
+							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚ×óÊ÷²åÈëÖ±½Ó×Ô¼õ¼´¿É£ºÓÒÊ÷ - (×óÊ÷ + 1)		*/
+							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚÓÒÊ÷²åÈëÖ±½Ó×ÔÔö¼´¿É£ºÓÒÊ÷ + 1 - ×óÊ÷			*/
+
+							  if (ParentNode->lchild == ptemp)  //¸¸½ÚµãµÄ×ó×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã
+							  {
+										ParentNode->BF--;				   //Èç¹ûÎª×ó×ÓÊ÷Ôò×Ô¼õ
+							  }
+
+							  if (ParentNode->rchild == ptemp)  //¸¸½ÚµãµÄÓÒ×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã
+							  {
+										ParentNode->BF++;				   //Èç¹ûÎªÓÒ×ÓÊ÷Ôò×ÔÔö
+							  }
+
+							  if (ParentNode->BF == 0)					  //Ô­ÏÈµÄÒÑ¾­´æÔÚÒ»¸ö×ÓÊ÷£¬ÏÖÔÚ²åÈëÁíÒ»¸ö×ÓÊ÷
+							  {
+										break;											  //½áµãµÄÆ½ºâÒò×ÓÎª0£¬Ö±½ÓÌø³ö
+							  }
+							  else if(abs(ParentNode->BF) == 1)		  //Æ½ºâÒò×Ó´¦ÓÚ1»òÕß-1
+							  {
+										ptemp = ParentNode;			          //½øĞĞµü´ú£¬½«Ô­ÏÈµÄ¸¸½Úµã×÷ÎªÅĞ¶ÏµÄ½áµã
+							  }
+							  else                                                          //Æ½ºâÒò×Ó´¦ÓÚx<-1 »ò x>1µÄÇé¿ö£¬µ÷ÓÃ4ÖÖĞı×ª
+							  {
+												  
+							  }
+					}
+					DestroyLinkStack(&stack);				 //´İ»ÙÕ»
 					return TRUE;
 		  }
 		  return FALSE;
 }
 
-//BSTNode* BSTreeSearch(BST T, ElemType key)        //Ö¸¶¨½áµãËÑË÷
-//{
-//		  assert(T.root != NULL);
-//		  return _BSTreeSearch(T.root, key);
-//}
-//
-//static BSTNode* _BSTreeSearch(BSTNode* p, ElemType key)  //ËÑË÷½áµã×Óº¯Êı
-//{
-//		  BOOL flag = 0;				//ÊÇ·ñÕÒµ½±êÊ¶
-//		  BSTNode* temp = p;
-//		  while (temp != NULL)
-//		  {
-//					if (temp->data == key)
-//					{
-//							  flag = 1;
-//							  break;
-//					}
-//					else if (temp->data > key)         //ËÑË÷µÄÊıÖµ´óÓÚ¸ù½Úµã
-//					{
-//							  temp = temp->rchild;
-//					}
-//					else
-//					{
-//							  temp = temp->lchild;
-//					}
-//		  }
-//		  return (flag ? temp : NULL);
-//}
-//
-//BOOL RemoveBSTree(BST *T, ElemType key)         //Ö¸¶¨½áµãÉ¾³ı
-//{
-//		  return _RemoveBSTree(&(T->root), key);
-//}
-//
-//static BOOL _RemoveBSTree(BSTNode** p, ElemType key) //É¾³ı½áµã×Óº¯Êı
-//{
-//		  if (*p == NULL)
-//		  {
-//					return FALSE;
-//		  }
-//		  else if((*p)->data > key)
-//		  {
-//					_RemoveBSTree(&((*p)->rchild), key);	//´óÓÚ¸ù½Úµã£¬È¥ÓÒ×ÓÊ÷
-//		  }
-//		  else if ((*p)->data < key)
-//		  {
-//					_RemoveBSTree(&((*p)->lchild), key);	//Ğ¡ÓÚ¸ù½Úµã£¬È¥×ó×ÓÊ÷
-//		  }
-//		  else
-//		  {
-//					BSTNode* ptemp = NULL;
-//					if ((*p)->lchild != NULL && (*p)->rchild != NULL)	 //×óÓÒ×ÓÊ÷¶¼²»¿ÕµÄÇé¿ö(×î¸´ÔÓ)
-//					{
-//							  ptemp = (*p)->rchild;
-//							  while (ptemp->lchild != NULL)	//Ñ°ÕÒ×î×ó±ß
-//							  {
-//										ptemp = ptemp->lchild;
-//							  }
-//							  (*p)->data = ptemp->data;		//Ê¹ÓÃÖ±½Óºó¼ÌµÄÊı¾İÌæ´úÉ¾³ıµÄ½áµã
-//							  _RemoveBSTree(&((*p)->rchild), (*p)->data);		//µİ¹éµ÷ÓÃ
-//					}
-//					else
-//					{
-//							  if ((*p)->lchild == NULL)
-//							  {
-//										ptemp = (*p)->rchild;					  //Ö¸ÏòÉ¾³ı½áµãµÄÓÒº¢×Ó
-//							  }
-//							  else
-//							  {
-//										ptemp = (*p)->lchild;					  //Ö¸ÏòÉ¾³ı½áµãµÄ×óº¢×Ó
-//							  }
-//							  free(*p);											  //É¾³ıÔ­ÏÈ½áµã
-//							  *p = ptemp;									  //Ê¹ÓÃÓÒº¢×ÓÌæ´úÉ¾³ı½áµã
-//					}
-//					return TRUE;
-//		  }
-//		  return FALSE;
-//}
-//
-//ElemType FindMaximum(BST T)           //Çó×î´ó
-//{
-//		  assert(T.root != NULL);
-//		  return _FindMaximum(T.root);
-//}
-//
-//static ElemType _FindMaximum(BSTNode* p)       //Çó×î´ó×Óº¯Êı
-//{
-//		  BSTNode* ptemp = p;
-//		  while (ptemp->rchild != NULL)
-//		  {
-//					ptemp = ptemp->rchild;
-//		  }
-//		  return ptemp->data;
-//}
-//
-//ElemType FindMininum(BST T)               //Çó×îĞ¡
-//{
-//		  assert(T.root != NULL);
-//		  return _FindMininum(T.root);
-//}
-//
-//static ElemType _FindMininum(BSTNode* p)               //Çó×îĞ¡×Óº¯Êı
-//{
-//		  BSTNode* ptemp = p;
-//		  while (ptemp->lchild != NULL)
-//		  {
-//					ptemp = ptemp->lchild;
-//		  }
-//		  return ptemp->data;
-//}
-//
-//void BSTSort(BST T)                 //ÅÅĞò
-//{
-//		  assert(T.root != NULL);
-//		  _BSTSort(T.root);
-//		  printf("\n");
-//}
-//static void _BSTSort(BSTNode* p)      //ÅÅĞò×Óº¯Êı
-//{
-//		  if (p != NULL)
-//		  {
-//					_BSTSort(p->lchild);
-//					printf("%d ", p->data);
-//					_BSTSort(p->rchild);
-//		  }
-//}
+BOOL JudgeAVLTree(AVLTree* T)                  //Æ½ºâ¶ş²æÊ÷µÄÆ½ºâĞÔÅĞ¶Ï
+{
+		  if (T->root == NULL)
+		  {
+					return TRUE;
+		  }
+		  else
+		  {
+					BOOL balance = 0;
+					int height = 0;
+					return _JudgeAVLTree(T->root, &balance, &height);
+		  }
+}
+
+static BOOL _JudgeAVLTree(AVLNode* T, BOOL* balance, int* height)       //Æ½ºâ¶ş²æÊ÷µÄÆ½ºâĞÔÅĞ¶Ï×Óº¯Êı
+{
+		  return FALSE;
+}

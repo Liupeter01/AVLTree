@@ -142,6 +142,7 @@
     <ClCompile Include="AVL.c" />
     <ClCompile Include="AVLDelete.c" />
     <ClCompile Include="AVLRotate.c" />
+    <ClCompile Include="LinkStack.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="AVLStruct.h" />
     <ClInclude Include="AVLDelete.h" />
     <ClInclude Include="AVLRotate.h" />
+    <ClInclude Include="LinkStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

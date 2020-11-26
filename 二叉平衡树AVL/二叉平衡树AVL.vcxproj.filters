@@ -1,45 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="二叉平衡树的数据结构">
+      <UniqueIdentifier>{4c185920-5f9a-4fbf-b056-60679b2caea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="二叉平衡树的数据结构\头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="二叉平衡树的数据结构\源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="栈的数据结构">
+      <UniqueIdentifier>{8768baf3-5124-42a2-bdd9-4e8e65b0d7f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="栈的数据结构\源文件">
+      <UniqueIdentifier>{fb40706b-b5cc-4676-8a77-f020e29cc6fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="栈的数据结构\头文件">
+      <UniqueIdentifier>{aac86669-bfa6-439a-85e9-89d639229802}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
-      <Filter>源文件</Filter>
+      <Filter>二叉平衡树的数据结构\源文件</Filter>
     </ClCompile>
     <ClCompile Include="AVLDelete.c">
-      <Filter>源文件</Filter>
+      <Filter>二叉平衡树的数据结构\源文件</Filter>
     </ClCompile>
     <ClCompile Include="AVLRotate.c">
-      <Filter>源文件</Filter>
+      <Filter>二叉平衡树的数据结构\源文件</Filter>
     </ClCompile>
     <ClCompile Include="AVL.c">
-      <Filter>源文件</Filter>
+      <Filter>二叉平衡树的数据结构\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkStack.c">
+      <Filter>栈的数据结构\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVLRotate.h">
-      <Filter>头文件</Filter>
+      <Filter>二叉平衡树的数据结构\头文件</Filter>
     </ClInclude>
     <ClInclude Include="AVLDelete.h">
-      <Filter>头文件</Filter>
+      <Filter>二叉平衡树的数据结构\头文件</Filter>
     </ClInclude>
     <ClInclude Include="AVL.h">
-      <Filter>头文件</Filter>
+      <Filter>二叉平衡树的数据结构\头文件</Filter>
     </ClInclude>
     <ClInclude Include="AVLStruct.h">
-      <Filter>头文件</Filter>
+      <Filter>二叉平衡树的数据结构\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkStack.h">
+      <Filter>栈的数据结构\头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
