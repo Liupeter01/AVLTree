@@ -1,6 +1,6 @@
 //Copyright:LPH
 //Author: ÁõÅæºã
-//Date:2020-11-26
+//Date:2020-11-26~2020-11-28
 //Description:Æ½ºâ¶þ²æÊ÷µÄ»ù±¾¹¦ÄÜº¯Êý
 
 #include"AVL.h"
@@ -78,12 +78,13 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 		  {
 					*node = CreateAVLNode(x);
 					return TRUE;
-		  }
+		  } 
 		  else
 		  {
 					LinkStack stack;	
 					InitLinkStack(&stack);							  //³õÊ¼»¯Õ»
 
+					/*ÕâÐ©¶¼ÊÇBSTÊ÷µÄÌØÕ÷*/
 					AVLNode* ptemp = *node;
 					AVLNode* parent = NULL;
 					while (ptemp != NULL)
@@ -114,8 +115,8 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 							  parent->rchild = ptemp;
 					}
 
-					AVLNode * ParentNode = NULL;
 					/* ÖØËãÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµ*/
+					AVLNode * ParentNode = NULL;  //ParentNodeÓÐ¿ÉÄÜ»á±»Ðý×ªº¯Êý¸üÐÂ
 					while (!isEmpty(stack))							
 					{
 							  Pop_Stack(&stack, &ParentNode);
@@ -138,21 +139,17 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 							  }
 							  if(abs(ParentNode->BF) == 1)				  //Æ½ºâÒò×Ó´¦ÓÚ1»òÕß-1
 							  {
-										ptemp = ParentNode;			          //½øÐÐµü´ú£¬½«Ô­ÏÈµÄ¸¸½Úµã×÷ÎªÅÐ¶ÏµÄ½áµã
+										ptemp = ParentNode;			          //½«¸¸½Úµã½øÐÐµü´ú£¬ÏòÉÏ¼ÌÐø¼ì²âÆ½ºâÒò×Ó
 							  }
 							  else														  //abs(ParentNode->BF)>1£¬µ÷ÓÃ4ÖÖÐý×ª
 							  {
 										/*Ðý×ª¹ØÏµ¶ÔÓ¦¾ØÕó*/
-										  //0´ú±íRRÐý×ª
-										  //1´ú±íRLÐý×ª
-										  //2´ú±íLRÐý×ª
-									      //3´ú±íLLÐý×ª
 										/*---------------------------------
-										   -		RR	-		RL		    -
-										   -				 -						-
+										   -	   RR	 -		   RL		-
+										   -		0		 -			1			-
 										   --------------------------------
-										   -		LR    -		LL			-
-										   -				 -						-
+										   -		LR    -		   LL			-
+										   -		2		 -			3			-
 										----------------------------------*/
 										int flag[2][2] = { 0,1,2,3 };
 
@@ -167,7 +164,8 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 												  AVLTreeRotateLL				    //LL    /   Ðý×ªº¯Êý
 										};
  										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](&ParentNode);  //µ÷ÓÃÐý×ª·½·¨
-										break;
+										/*¼ÈÈ»Æ½ºâÒÑ¾­µ÷ÕûÍê±Ï£¬µ×²ãµÄ²»Æ½ºâÊÇ²»»áÓ°ÏìÉÏ²ãµÄ²»Æ½ºâµÄ£¬Ö»ÐèÒªÌø³ö²¢½øÐÐ½áµãµÄÁ´½Ó*/
+										break;	
 							  }
 					}
 
