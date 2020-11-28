@@ -114,12 +114,11 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //≤Â»ÎππΩ
 							  parent->rchild = ptemp;
 					}
 
+					AVLNode * ParentNode = NULL;
 					/* ÷ÿÀ„—ÿÕæµƒ∆Ω∫‚“Ú◊”BF÷µ*/
 					while (!isEmpty(stack))							
 					{
-							  ElemStackType ParentNode;
 							  Pop_Stack(&stack, &ParentNode);
-
 							  /*  BFº∆À„∑Ω∑®Œ™£∫”“ ˜-◊Û ˜£¨“Ú¥À‘⁄◊Û ˜≤Â»Î÷±Ω”◊‘ºıº¥ø…£∫”“ ˜ - (◊Û ˜ + 1) = ”“ ˜ - ◊Û ˜ - 1	*/
 							  /*  BFº∆À„∑Ω∑®Œ™£∫”“ ˜-◊Û ˜£¨“Ú¥À‘⁄”“ ˜≤Â»Î÷±Ω”◊‘‘ˆº¥ø…£∫”“ ˜ + 1 - ◊Û ˜ = ”“ ˜ - ◊Û ˜ + 1	*/
 
@@ -148,6 +147,13 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //≤Â»ÎππΩ
 										  //1¥˙±ÌRL–˝◊™
 										  //2¥˙±ÌLR–˝◊™
 									      //3¥˙±ÌLL–˝◊™
+										/*---------------------------------
+										   -		RR	-		RL		    -
+										   -				 -						-
+										   --------------------------------
+										   -		LR    -		LL			-
+										   -				 -						-
+										----------------------------------*/
 										int flag[2][2] = { 0,1,2,3 };
 
 										int flag_ParentNode = (ParentNode->BF > 0) ? 0 : 1;	   //≈–∂œµ±«∞ParentNode∆Ω∫‚“Ú◊”µƒ’˝∏∫–‘
@@ -161,35 +167,26 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //≤Â»ÎππΩ
 												  AVLTreeRotateLL				    //LL    /   –˝◊™∫Ø ˝
 										};
  										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](&ParentNode);  //µ˜”√–˝◊™∑Ω∑®
+										break;
+							  }
+					}
 
-										if (isEmpty(stack))			  //≈–∂œ’ª÷– «∑Ò÷ª”–“ª∏ˆ‘™Àÿ
-										{
-												  //‘⁄∆Ω∫‚∂˛≤Ê ˜≤ª∆Ω∫‚µƒ’º÷˜ÃÂ
-												  *node = ParentNode;			//‘⁄µ±«∞µƒ ˜÷–£¨ParentNodeæÕ «∏˘Ω⁄µ„
-										}
-										else
-										{
-												  //‘⁄∆Ω∫‚∂˛≤Ê ˜÷–”–“ª≤ø∑÷ «≤ª∆Ω∫‚µƒ
-												  AVLNode* Head = GetTop(stack);		  //’ª√ªø’ªÒ»°’ª∂•
-												  if (Head->lchild == ptemp)	//◊Û ˜Œ™Œ¥∆Ω∫‚ªØ÷Æ«∞ptempΩ·µ„(ParentNodeµƒ∫¢◊”Ω·µ„)
-												  {
-															Head->lchild = ParentNode;				//¡¥Ω”–¬µƒ∏˘Ω⁄µ„
-												  }
-												  else									  //”“ ˜Œ™Œ¥∆Ω∫‚ªØ÷Æ«∞ptempΩ·µ„(ParentNodeµƒ∫¢◊”Ω·µ„)
-												  {
-															Head->rchild = ParentNode;				//¡¥Ω”–¬µƒ∏˘Ω⁄µ„
-												  }
-
-												  ////µ⁄∂˛÷÷¡¥Ω”Àº¬∑
-												  //if (Head->data > ParentNode->data)	//∏˘æ›¥Û–°Ω¯–––¬∏˘Ω·µ„µƒ¡¥Ω”
-												  //{
-														//	Head->rchild = ParentNode;			
-												  //}
-												  //else									
-												  //{
-														//	Head->lchild = ParentNode;			
-												  //}
-										}
+					if (isEmpty(stack))			  //≈–∂œ’ª÷– «∑Ò÷ª”–“ª∏ˆ‘™Àÿ
+					{
+							  //‘⁄∆Ω∫‚∂˛≤Ê ˜≤ª∆Ω∫‚µƒ’º÷˜ÃÂ
+							  *node = ParentNode;			//‘⁄µ±«∞µƒ ˜÷–£¨ParentNodeæÕ «∏˘Ω⁄µ„
+					}
+					else
+					{
+							  //‘⁄∆Ω∫‚∂˛≤Ê ˜÷–”–“ª≤ø∑÷ «≤ª∆Ω∫‚µƒ
+							  AVLNode* Head = GetTop(stack);		  //’ª√ªø’ªÒ»°’ª∂•
+							  if (Head->data > ParentNode->data)	//∏˘æ›¥Û–°Ω¯–––¬∏˘Ω·µ„µƒ¡¥Ω”
+							  {
+										Head->lchild = ParentNode;
+							  }
+							  else									
+							  {
+										Head->rchild = ParentNode;
 							  }
 					}
 					DestroyLinkStack(&stack);				 //¥›ªŸ’ª

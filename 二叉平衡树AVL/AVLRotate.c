@@ -30,5 +30,31 @@ void AVLTreeRotateRL(AVLNode** parent)						//双旋RL旋转，修改指针用二级指针
 
 void AVLTreeRotateLR(AVLNode** parent)					//双旋LR旋转，修改指针用二级指针
 {
+		  AVLNode* SubLeft = (*parent)->lchild;		//新左子树
+		  AVLNode* SubRight = *parent;					//新右子树
+		  *parent = SubLeft->rchild;						    //新根节点
 
+		  SubLeft->rchild = (*parent)->lchild;		    //新根节点存在左子树
+		  (*parent)->lchild = SubLeft;
+
+		  if ((*parent)->BF <= 0)					//新根节点有左树
+		  {
+					SubLeft->BF = 0;				//左树被移到了新左子树的右树，修改BF平衡因子
+		  }
+		  else												//新根节点没有左树
+		  {
+					SubLeft->BF = -1;				//新左子树只有左树没有右树，修改BF平衡因子
+		  }
+
+		  SubRight->lchild = (*parent)->rchild;
+		  (*parent)->rchild = SubRight;
+		  if ((*parent)->BF == -1)					//新根节点没有右树
+		  {
+					SubRight->BF = 1;				//左树被移到了新左子树的右树，修改BF平衡因子
+		  }
+		  else												//新根节点没有左树
+		  {
+					SubRight->BF = 0;				//新左子树只有左树没有右树，修改BF平衡因子
+		  }
+		  (*parent)->BF = 0;					  //修改新根节点平衡因子
 }
