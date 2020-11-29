@@ -1,3 +1,8 @@
+//Copyright:LPH
+//Author: 刘沛恒
+//Date:2020-11-28
+//Description:平衡二叉树的4种旋转操作
+
 #pragma once
 #include"AVLStruct.h"
 
