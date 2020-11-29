@@ -12,7 +12,7 @@ int main()
 					InsertAVLTreeIterate(&T, arr[i]);
 		  }
 
-		  RemoveAVLTree(&T, 70);
+		  RemoveAVLTree(&T, 40);
 
 		  DestroyAVLTree(&T);
 		  return 0;
