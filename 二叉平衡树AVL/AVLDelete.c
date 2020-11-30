@@ -140,7 +140,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 										   -	   LL		 -		   LR		-
 										   -		0		 -			1			-
 											--------------------------------
-											-		RR    -		   RL		-
+											-		RL    -		   RR		-
 											 -		2		 -			3			-
 										 ----------------------------------*/
 										int flag[2][2] = { 0,1,2,3 };
@@ -148,8 +148,8 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 										{
 												   AVLTreeRotateLL,				//LL    /   旋转函数
 												   AVLTreeRotateLR,				//LR   <  旋转函数
-												   AVLTreeRotateRR,				//RR   \   旋转函数
-												   AVLTreeRotateRL				//RL   >  旋转函数
+												   AVLTreeRotateRL,				//RL   >  旋转函数
+												   AVLTreeRotateRR				//RR   \   旋转函数
 										};
 
 										int flag_Parent = 0;		  //判断当前平衡因子的正负性
@@ -166,51 +166,38 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 												  p = Parent->rchild;		//调整p指向parent的右子树，当前右子树高度大于左子树
 										}
 
-										int flag_P = 0;				 //判断当前p平衡因子的正负性
-
 										//Copyright:LPH
 										//Author: 刘沛恒
-										//Date:2020-11-29
+										//Date:2020-11-29~2011-11-30
 										//Description:如果p结点的平衡因子为0，则只需要执行一个LL / RR旋转算法来恢复结点Parent的平
 										if (p->BF == 0)		    //当前p平衡因子保持平衡状态
 										{
-												  flag_P = (flag_Parent == 0) ? 0 : 1;				//确定具体调用哪一个单旋类算法
-												  Rotatefunc[flag[flag_Parent][flag_P]](&Parent);  //调用旋转方法
-
+												  Rotatefunc[flag[flag_Parent][flag_Parent]](&Parent);  //调用旋转方法
 												  if (!flag_Parent)			  //采用L系AVL旋转算法，重新调整平衡因子
 												  {
-															if (!p->BF)			//p的平衡因子为0
-															{
-
-															}
-															else
-															{
-																	  Parent->BF = 1;
-																	  p->BF = -1;
-															}
+															Parent->BF = 1;
+															p->rchild->BF = -1;
 												  }
 												  else							 //采用R系AVL旋转算法，重新调整平衡因子
 												  {
-															if (!p->BF)			//p的平衡因子为0
-															{
-
-															}
-															else
-															{
-																	  Parent->BF = -1;
-																	  p->BF = -1;
-															}
+															Parent->BF = -1;
+															p->lchild->BF = 1;
 												  }
 												  break;					//调整完毕，跳出并进行结点的链接
 										}
 	
+										int flag_P = 0;				 //判断当前p平衡因子的正负性
+										 //Copyright:LPH
+										 //Author: 刘沛恒
+										//Date:2020-11-30
+										//Description:其他两种情况的处理方法
 										if ((p->BF < 0 && Parent->BF < 0) || (p->BF > 0 && Parent->BF > 0))	  //p和Parent结点同号
 										{
 												  //Copyright:LPH
 												  //Author: 刘沛恒
 												  //Date:2020-11-29
 												  //Description:如果p结点和Parent的平衡因子正负性一致，执行一个LL/RR来恢复平衡
-												  int flag_P = (p->BF < 0) ? 0 : 1;					//单旋转
+												  flag_P = (p->BF < 0) ? 0 : 1;					//单旋转
 										}
 										else	  //p和Parent结点异号，调用
 										{
@@ -218,7 +205,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 												  //Author: 刘沛恒
 												  //Date:2020-11-29
 												  //Description:	如果p结点和Parent的平衡因子正负性相反，则执行一个LR/RL来恢复平衡
-												  int flag_P = (p->BF < 0) ? 1 : 0;					//双旋转
+												  flag_P = (p->BF < 0) ? 1 : 0;					//双旋转
 										}
 										Rotatefunc[flag[flag_Parent][flag_P]](&Parent);  //调用旋转方法
 										break;					//调整完毕，跳出并进行结点的链接

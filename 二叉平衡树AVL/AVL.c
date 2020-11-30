@@ -203,7 +203,22 @@ static AVLNode* _AVLTreeSearch(AVLNode* node, ElemType key)			//二叉树的结点搜索
 {
 		  if (node != NULL)
 		  {
-
+					AVLNode* ptemp = node;
+					while (ptemp != NULL)
+					{
+							  if (ptemp->data > key)
+							  {
+										ptemp = ptemp->lchild;
+							  }
+							  else if(ptemp->data < key)
+							  {
+										ptemp = ptemp->rchild;
+							  }
+							  else
+							  {
+										return ptemp;
+							  }
+					}
 		  }
 		  return NULL;
 }
