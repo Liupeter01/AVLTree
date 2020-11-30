@@ -84,9 +84,9 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 					LinkStack stack;	
 					InitLinkStack(&stack);							  //³õÊ¼»¯Õ»
 
-					/*ÕâĞ©¶¼ÊÇBSTÊ÷µÄÌØÕ÷*/
-					AVLNode* ptemp = *node;
-					AVLNode* parent = NULL;
+					
+					AVLNode* ptemp = *node;		  //Ñ°ÕÒ²åÈëµÄÎ»ÖÃ
+					AVLNode* parent = NULL;		  //¼ÇÂ¼²åÈëÎ»ÖÃµÄÖ±½ÓË«Ç×½áµã
 					while (ptemp != NULL)
 					{
 							  parent = ptemp;								  //¼ÇÂ¼²åÈë½áµãÉÏÒ»´Î·ÃÎÊµÄ½áµã
@@ -96,15 +96,9 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 							  {
 										return FALSE;							
 							  }
-							  else if (ptemp->data > x)				  //²åÈëÊıÖµĞ¡ÓÚ½áµã
-							  {
-										ptemp = ptemp->lchild;
-							  }
-							  else												 //²åÈëÊıÖµ´óÓÚ½áµã
-							  {
-										ptemp = ptemp->rchild;
-							  }
+							  ptemp = ((ptemp->data > x) ? ptemp->lchild : ptemp->rchild);
 					}
+
 					ptemp = CreateAVLNode(x);
 					if (parent->data > x)							     //¸¸½Úµã´óÓÚ²åÈë½áµã
 					{
@@ -115,14 +109,21 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 							  parent->rchild = ptemp;
 					}
 
-					/* ÖØËãÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµ*/
+					//Copyright:LPH
+					//Author: ÁõÅæºã
+					//Date:2020-11-29
+					//Description: ÖØËãÔÚÕ»ÄÚµÄÑØÍ¾µÄÆ½ºâÒò×ÓBFÖµºÍ¸ù¾İBFÖµ×ö³öµ÷Õû
 					AVLNode * ParentNode = NULL;  //ParentNodeÓĞ¿ÉÄÜ»á±»Ğı×ªº¯Êı¸üĞÂ
 					while (!isEmpty(stack))							
 					{
 							  Pop_Stack(&stack, &ParentNode);
-							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚ×óÊ÷²åÈëÖ±½Ó×Ô¼õ¼´¿É£ºÓÒÊ÷ - (×óÊ÷ + 1) = ÓÒÊ÷ - ×óÊ÷ - 1	*/
-							  /*  BF¼ÆËã·½·¨Îª£ºÓÒÊ÷-×óÊ÷£¬Òò´ËÔÚÓÒÊ÷²åÈëÖ±½Ó×ÔÔö¼´¿É£ºÓÒÊ÷ + 1 - ×óÊ÷ = ÓÒÊ÷ - ×óÊ÷ + 1	*/
-
+							  //Copyright:LPH
+							  //Author: ÁõÅæºã
+							  //Date:2020-11-29
+							  //Description:ÊµÏÖ×ÓÊ÷Æ½ºâÒò×Ó¸ù¾İ·ÖÖ§±ä»¯µÄ¶¯Ì¬¼ÆËã
+							  //Details:
+							  //@Èç¹ûÔÚ×ó·ÖÖ§½øĞĞÁË²åÈë(×óÊ÷¸ß¶È±ä´ó)£ºBF = ÓÒÊ÷ - (×óÊ÷ + 1) = ÓÒÊ÷ - ×óÊ÷ - 1
+							  //@Èç¹ûÔÚÓÒ·ÖÖ§½øĞĞÁË²åÈë(ÓÒÊ÷¸ß¶È±ä´ó)£ºBF = ÓÒÊ÷ + 1 - ×óÊ÷ = ÓÒÊ÷ - ×óÊ÷ + 1		
 							  if (ParentNode->lchild == ptemp)		  //¸¸½ÚµãµÄ×ó×ÓÊ÷Ç¡ºÃµÈÓÚ²åÈë½áµã£¬×ó×ÓÊ÷×Ô¼õ
 							  {
 										ParentNode->BF--;				   
@@ -164,8 +165,7 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 												  AVLTreeRotateLL				    //LL    /   Ğı×ªº¯Êı
 										};
  										Rotatefunc[flag[flag_ParentNode][flag_Ptemp]](&ParentNode);  //µ÷ÓÃĞı×ª·½·¨
-										/*¼ÈÈ»Æ½ºâÒÑ¾­µ÷ÕûÍê±Ï£¬µ×²ãµÄ²»Æ½ºâÊÇ²»»áÓ°ÏìÉÏ²ãµÄ²»Æ½ºâµÄ£¬Ö»ĞèÒªÌø³ö²¢½øĞĞ½áµãµÄÁ´½Ó*/
-										break;	
+										break;					//µ÷ÕûÍê±Ï£¬Ìø³ö²¢½øĞĞ½áµãµÄÁ´½Ó
 							  }
 					}
 
@@ -191,6 +191,21 @@ static BOOL _InsertAVLTreeIterate(AVLNode** node, ElemType x)          //²åÈë¹¹½
 					return TRUE;
 		  }
 		  return FALSE;
+}
+
+AVLNode* AVLTreeSearch(AVLTree T, ElemType key)			//¶ş²æÊ÷µÄ½áµãËÑË÷º¯Êı
+{
+		  assert(T.root != NULL);
+		  return _AVLTreeSearch(T.root, key);
+}
+
+static AVLNode* _AVLTreeSearch(AVLNode* node, ElemType key)			//¶ş²æÊ÷µÄ½áµãËÑË÷º¯Êı×Óº¯Êı
+{
+		  if (node != NULL)
+		  {
+
+		  }
+		  return NULL;
 }
 
 BOOL JudgeAVLTree(AVLTree T)                  //Æ½ºâ¶ş²æÊ÷µÄÆ½ºâĞÔÅĞ¶Ï
