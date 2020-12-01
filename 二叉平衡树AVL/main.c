@@ -13,7 +13,14 @@ int main()
 					InsertAVLTreeIterate(&T, arr[i]);
 		  }
 
+		  if (AVLTreeSearch(T, 60) != NULL)
+		  printf("%d", AVLTreeSearch(T, 60)->data);
+
 		  RemoveAVLTree(&T, 60);				  //É¾³ý½áµã
+
+		  if(AVLTreeSearch(T, 60)!=NULL)
+		  printf("%d", AVLTreeSearch(T, 60)->data);
+
 		  DestroyAVLTree(&T);
 		  return 0;
 }

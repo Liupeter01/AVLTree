@@ -243,6 +243,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  }
 					}
 					free(ptemp);											  //删除原先结点
+					if(DeleteNode!=NULL)						   //存在一种情况，删除结点的双亲结点发生平衡移动
 					DeleteNode->rchild = NULL;			  //将原先删除结点的双亲结点的右子树置空(用于覆盖用的结点)
 					DestroyLinkStack(&stack);
 					return TRUE;
