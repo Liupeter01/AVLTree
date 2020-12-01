@@ -45,7 +45,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 					//Copyright:LPH
 					//Author: 刘沛恒
 					//Date:2020-11-29
-					//Description:此处的代码用于进行结点的删除(与BST删除几乎一样)
+					//Description:此处的代码用于进行分支结点的删除(与BST删除几乎一样)
 					if (ptemp->lchild != NULL && ptemp->rchild != NULL)			//左右子树都不空
 					{ 
 							  next = ptemp->lchild;					  //访问ptemp的左子树
@@ -66,7 +66,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  {
 										next = ptemp->lchild;
 							  }
-							  else if (ptemp->lchild == NULL && ptemp->rchild != NULL)
+							  if (ptemp->lchild == NULL && ptemp->rchild != NULL)
 							  {
 										next = ptemp->rchild;
 							  }
@@ -93,12 +93,12 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  if (Parent->lchild == ptemp)
 							  {
 										Parent->lchild = next;
-										status = LeftChild;
+										status = LeftChild;			  //记录删除子树位于其双亲结点的方位
 							  }
 							  else
 							  {
 										Parent->rchild = next;
-										status = RightChild;
+										status = RightChild;					//记录删除子树位于其双亲结点的方位
 							  }
 					}
 
@@ -113,7 +113,10 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  //Copyright:LPH
 							  //Author: 刘沛恒
 							  //Date:2020-11-30
-							  //Description:修正LeftChild和RightChild没有被正确修改，从而影响平衡因子计算的问题
+							  //Description:
+							  //@确保经过上次迭代过程后LeftChild和RightChild都被设定到了正确的数值，进行校验
+							  //@防止在该处出现错误从而后序的影响平衡因子平衡计算的问题
+
 							  if (Parent->lchild == next)
 							  {
 										status = LeftChild;
@@ -139,7 +142,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  //Copyright:LPH
 							   //Author: 刘沛恒
 							   //Date:2020-11-29
-							   //Description:根据重算后平衡因子决定当前的树是否平衡
+							   //Description:根据重算后平衡因子判定当前的树是否平衡
 							  if (abs(Parent->BF) == 1)		//在删除之前父节点的平衡因子一定为0，树整体高度不改变
 							  {
 										break;				//直接执行跳出循环
@@ -188,12 +191,12 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 										if (p->BF == 0)		    //当前p平衡因子保持平衡状态
 										{
 												  Rotatefunc[flag[flag_Parent][flag_Parent]](&Parent);  //调用旋转方法
-												  if (!flag_Parent)			  //采用L系AVL旋转算法，重新调整平衡因子
+												  if (!flag_Parent)			  //采用L系AVL旋转算法，根据不同的偏转方向进行平衡因子矫正
 												  {
 															Parent->BF = 1;
 															p->rchild->BF = -1;
 												  }
-												  else							 //采用R系AVL旋转算法，重新调整平衡因子
+												  else							 //采用R系AVL旋转算法，根据不同的偏转方向进行平衡因子矫正
 												  {
 															Parent->BF = -1;
 															p->lchild->BF = 1;
@@ -222,7 +225,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 										//Copyright:LPH
 										//Author: 刘沛恒
 										//Date:2020-12-1
-										//Description:	进行结点的链接
+										//Description:	调整完后，进行已经被顶替的结点的重新链接
 										if (isEmpty(stack))
 										{
 												  *node = Parent;
@@ -239,12 +242,14 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 															Head->rchild = Parent;
 												  }
 										}
-										next = Parent;
+										next = Parent;				  //继续的向上寻找，可能存在多处不平衡(这行代码很重要)
 							  }
 					}
 					free(ptemp);											  //删除原先结点
-					if(DeleteNode!=NULL)						   //存在一种情况，删除结点的双亲结点发生平衡移动
-					DeleteNode->rchild = NULL;			  //将原先删除结点的双亲结点的右子树置空(用于覆盖用的结点)
+					if (DeleteNode != NULL)						   //存在一种情况，删除结点的双亲结点发生平衡移动
+					{
+							  DeleteNode->rchild = NULL;			  //将原先删除结点的双亲结点的右子树置空(用于覆盖用的结点)
+					}
 					DestroyLinkStack(&stack);
 					return TRUE;
 		  }
