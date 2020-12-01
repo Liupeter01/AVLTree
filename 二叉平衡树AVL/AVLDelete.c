@@ -49,6 +49,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 					{ 
 							  next = ptemp->lchild;					  //访问ptemp的左子树
 							  Parent = ptemp;									  //记录父节点
+							  Push_Stack(&stack, Parent);				 //记录沿途祖先节点路径
 							  while (next->rchild != NULL)		  //在左子树中寻找ptemp的直接前驱
 							  {
 										Parent = next;
@@ -107,6 +108,12 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 					while (!isEmpty(stack))					//读取位于栈中的祖先结点，并修改相应的BF值
 					{
 							  Pop_Stack(&stack, &Parent);		//将栈内元素出栈
+
+							  //Copyright:LPH
+							  //Author: 刘沛恒
+							  //Date:2020-11-30
+							  //Description:修正LeftChild和RightChild没有被正确修改，从而影响平衡因子计算的问题
+							  status = ((Parent->lchild == next) ? LeftChild : RightChild);
 
 							  //Copyright:LPH
 							  //Author: 刘沛恒
@@ -191,27 +198,42 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 										 //Author: 刘沛恒
 										//Date:2020-11-30
 										//Description:其他两种情况的处理方法
-										if ((p->BF < 0 && Parent->BF < 0) || (p->BF > 0 && Parent->BF > 0))	  //p和Parent结点同号
+										if ((p->BF < 0 && Parent->BF < 0) || (p->BF > 0 && Parent->BF > 0))	
 										{
 												  //Copyright:LPH
 												  //Author: 刘沛恒
 												  //Date:2020-11-29
-												  //Description:如果p结点和Parent的平衡因子正负性一致，执行一个LL/RR来恢复平衡
-												  flag_P = (p->BF < 0) ? 0 : 1;					//单旋转
+												  //Description:如果p结点和Parent的平衡因子正负性一致(同号)，执行一个LL/RR来恢复平衡
+												  flag_P = (flag_Parent == 0) ? 0 : 1;					//跟父亲结点保持一致
 										}
-										else	  //p和Parent结点异号，调用
+										else	 
 										{
 												  //Copyright:LPH
 												  //Author: 刘沛恒
 												  //Date:2020-11-29
-												  //Description:	如果p结点和Parent的平衡因子正负性相反，则执行一个LR/RL来恢复平衡
+												  //Description:	如果p结点和Parent的平衡因子正负性相反(异号)，则执行一个LR/RL来恢复平衡
 												  flag_P = (p->BF < 0) ? 1 : 0;					//双旋转
 										}
 										Rotatefunc[flag[flag_Parent][flag_P]](&Parent);  //调用旋转方法
 										break;					//调整完毕，跳出并进行结点的链接
 							  }
 					}
-
+					if (isEmpty(stack))
+					{
+							  *node = Parent;
+					}
+					else
+					{
+							  AVLNode* Head = GetTop(stack);
+							  if (Head->data > Parent->data)
+							  {
+										Head->lchild = Parent;
+							  }
+							  else
+							  {
+										Head->rchild = Parent;
+							  }
+					}
 					free(ptemp);											  //删除原先结点
 					DestroyLinkStack(&stack);
 					return TRUE;
