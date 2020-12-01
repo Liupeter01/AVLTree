@@ -18,6 +18,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 
 		  AVLNode* Parent = NULL;				  //记录父节点信息
 		  AVLNode* ptemp = *node;				  //记录即将删除结点信息
+		  AVLNode* DeleteNode = NULL;	//记录删除结点，防止删除后无法销毁
 
 		  //Copyright:LPH
 		  //Author: 刘沛恒
@@ -52,7 +53,7 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  Push_Stack(&stack, Parent);				 //记录沿途祖先节点路径
 							  while (next->rchild != NULL)		  //在左子树中寻找ptemp的直接前驱
 							  {
-										Parent = next;
+										DeleteNode = Parent = next;
 										next = next->rchild;
 										Push_Stack(&stack, Parent);				 //记录沿途祖先节点路径
 							  }
@@ -113,7 +114,14 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 							  //Author: 刘沛恒
 							  //Date:2020-11-30
 							  //Description:修正LeftChild和RightChild没有被正确修改，从而影响平衡因子计算的问题
-							  status = ((Parent->lchild == next) ? LeftChild : RightChild);
+							  if (Parent->lchild == next)
+							  {
+										status = LeftChild;
+							   }
+							  if (Parent->rchild == next)
+							  {
+										status = RightChild;
+							  }
 
 							  //Copyright:LPH
 							  //Author: 刘沛恒
@@ -190,15 +198,10 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 															Parent->BF = -1;
 															p->lchild->BF = 1;
 												  }
-												  break;					//调整完毕，跳出并进行结点的链接
 										}
 	
 										int flag_P = 0;				 //判断当前p平衡因子的正负性
-										 //Copyright:LPH
-										 //Author: 刘沛恒
-										//Date:2020-11-30
-										//Description:其他两种情况的处理方法
-										if ((p->BF < 0 && Parent->BF < 0) || (p->BF > 0 && Parent->BF > 0))	
+										if ((p->BF < 0 && Parent->BF < 0) || (p->BF > 0 && Parent->BF > 0))	  //情况2
 										{
 												  //Copyright:LPH
 												  //Author: 刘沛恒
@@ -206,35 +209,41 @@ static BOOL _RemoveAVLTree(AVLNode** node, ElemType key)	// 平衡二叉树的结点删除
 												  //Description:如果p结点和Parent的平衡因子正负性一致(同号)，执行一个LL/RR来恢复平衡
 												  flag_P = (flag_Parent == 0) ? 0 : 1;					//跟父亲结点保持一致
 										}
-										else	 
+										else						   //情况3
 										{
 												  //Copyright:LPH
 												  //Author: 刘沛恒
 												  //Date:2020-11-29
 												  //Description:	如果p结点和Parent的平衡因子正负性相反(异号)，则执行一个LR/RL来恢复平衡
-												  flag_P = (p->BF < 0) ? 1 : 0;					//双旋转
+												  flag_P = (p->BF > 0) ? 1 : 0;					//双旋转
 										}
 										Rotatefunc[flag[flag_Parent][flag_P]](&Parent);  //调用旋转方法
-										break;					//调整完毕，跳出并进行结点的链接
-							  }
-					}
-					if (isEmpty(stack))
-					{
-							  *node = Parent;
-					}
-					else
-					{
-							  AVLNode* Head = GetTop(stack);
-							  if (Head->data > Parent->data)
-							  {
-										Head->lchild = Parent;
-							  }
-							  else
-							  {
-										Head->rchild = Parent;
+
+										//Copyright:LPH
+										//Author: 刘沛恒
+										//Date:2020-12-1
+										//Description:	进行结点的链接
+										if (isEmpty(stack))
+										{
+												  *node = Parent;
+										}
+										else
+										{
+												  AVLNode* Head = GetTop(stack);
+												  if (Head->data > Parent->data)
+												  {
+															Head->lchild = Parent;
+												  }
+												  else
+												  {
+															Head->rchild = Parent;
+												  }
+										}
+										next = Parent;
 							  }
 					}
 					free(ptemp);											  //删除原先结点
+					DeleteNode->rchild = NULL;			  //将原先删除结点的双亲结点的右子树置空(用于覆盖用的结点)
 					DestroyLinkStack(&stack);
 					return TRUE;
 		  }
